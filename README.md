@@ -58,6 +58,60 @@ Don't forget to start the process with hyprland, adding to `hyprland.conf`:
 exec-once = pypr
 ```
 
+### Nix installation
+
+Add the flake as import:
+
+``` nix
+inputs.pyprland.url = "github:VTimofeenko/pyprland?ref=nix";
+```
+
+Import the module and configure it:
+
+``` nix
+
+# Home-manager module for pyprland
+{ config, pkgs, lib, pyprland, ... }:
+let
+  droptermClass = "kitty-dropterm";
+in
+{
+  imports = [
+    pyprland.homeManagerModules.default  # Depends on how the pyprland input is handled in your flake
+  ];
+
+  programs.pyprland = {
+    enable = true;
+    extraConfig = {
+      pyprland = {
+        plugins = [
+          "scratchpads"
+        ];
+      };
+      scratchpads = {
+        "term" = {
+          command = "${lib.getExe pkgs.kitty} --class ${droptermClass}";
+          animation = "fromTop";
+          unfocus = "hide";
+        };
+      };
+    };
+  };
+  # pypr-specific config
+  wayland.windowManager.hyprland.extraConfig =
+    lib.mkAfter  # makes Nix append this config
+      ''
+        bind = $mainMod SHIFT, Return, exec, pypr toggle term
+        $dropterm = ^(${droptermClass})$
+        windowrule = float,$dropterm
+        windowrule = workspace special silent,$dropterm
+        windowrule = size 75% 60%,$dropterm
+      '';
+}
+```
+
+Alternatively, use `pypr` as `packages.default` from the flake.
+
 ## Getting started
 
 Create a configuration file in `~/.config/hypr/pyprland.json` enabling a list of plugins, each plugin may have its own configuration needs, eg:
