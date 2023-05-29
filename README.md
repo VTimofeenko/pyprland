@@ -101,7 +101,7 @@ in
   wayland.windowManager.hyprland.extraConfig =
     lib.mkAfter  # makes Nix append this config
       ''
-        exec-once = ${lib.getExe programs.pyprland.package};
+        exec-once = ${lib.getExe programs.pyprland.package};  # Or use services.pyprland.enable = true if using systemd
         bind = $mainMod SHIFT, Return, exec, pypr toggle term
         $dropterm = ^(${droptermClass})$
         windowrule = float,$dropterm
@@ -111,7 +111,7 @@ in
 }
 ```
 
-Alternatively, use `pypr` as `packages.default` from the flake.
+Alternatively, use `pypr` as `packages.default` from the flake or `services.pyprland.enable = true`
 
 ## Getting started
 
