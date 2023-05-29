@@ -101,6 +101,7 @@ in
   wayland.windowManager.hyprland.extraConfig =
     lib.mkAfter  # makes Nix append this config
       ''
+        exec-once = ${lib.getExe programs.pyprland.package};
         bind = $mainMod SHIFT, Return, exec, pypr toggle term
         $dropterm = ^(${droptermClass})$
         windowrule = float,$dropterm
