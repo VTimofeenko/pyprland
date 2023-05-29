@@ -35,7 +35,12 @@
                 inherit (config.packages) pyprland;
               };
               packages = rec {
-                pyprland = mkPoetryApplication { projectDir = ./.; };
+                pyprland = mkPoetryApplication {
+                  projectDir = ./.;
+                  meta = {
+                    mainProgram = "pypr";
+                  };
+                };
                 default = pyprland;
               };
               formatter = pkgs.nixpkgs-fmt;
